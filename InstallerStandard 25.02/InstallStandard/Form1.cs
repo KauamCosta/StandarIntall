@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Security.Principal;
+using Newtonsoft.Json;
 
 namespace InstallStandard {
     public partial class MainForm : Form {
@@ -26,6 +27,7 @@ namespace InstallStandard {
             UsuarioAtual.NomeUsuario = WindowsIdentity.GetCurrent().Name;
             UsuarioAtual.PrimeiroLogin = DateTime.Today;
             Computador.GravarNomeComputador = Environment.MachineName;
+            Json();
         }
         
 
@@ -158,7 +160,7 @@ namespace InstallStandard {
                     System.Diagnostics.Process.Start(@"Y:\Software\Instalacao Padrao\09 - Mozilla\Firefox.exe");
                     BtnMozila.Enabled = false;
                     Programas Mozilla = new Programas {
-                        Identificador = '1',
+                        Identificador = '8',
                         Instalado = true,
                         NomeDoPrograma = "Mozilla"
                     };
@@ -170,7 +172,7 @@ namespace InstallStandard {
                     System.Diagnostics.Process.Start(@"Y:\Software\Instalacao Padrao\06 - Microsoft Office\Microsoft Office 2010\setup.exe");
                     BtnOffice10.Enabled = false;
                     Programas Office10 = new Programas {
-                        Identificador = '1',
+                        Identificador = '9',
                         Instalado = true,
                         NomeDoPrograma = "Office 10"
                     };
@@ -182,7 +184,7 @@ namespace InstallStandard {
                     System.Diagnostics.Process.Start(@"Y:\Software\Instalacao Padrao\06 - Microsoft Office\Ativador\Office 2010 Toolkit.7z");
                     BtnKMS.Enabled = false;
                     Programas KMS = new Programas {
-                        Identificador = '1',
+                        Identificador = '0',
                         Instalado = true,
                         NomeDoPrograma = "KMS"
                     };
@@ -466,5 +468,15 @@ namespace InstallStandard {
             Clipboard.SetText("kauamcosta9@gmail.com");
         }
 
-    }
+        private void Json() {
+
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            using (StreamWriter sw = new StreamWriter(@"C:\Temp\StandarInstall\json.txt"))
+            using (JsonWriter writer = new JsonTextWriter(sw)) {
+                serializer.Serialize(writer, UsuarioAtual);
+                serializer.Serialize(writer, Computador);
+            }
+        }
+    }    
 }
